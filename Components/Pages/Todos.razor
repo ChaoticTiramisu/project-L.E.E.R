@@ -1,0 +1,59 @@
+@page "/todos"
+@using blazor_rem_project.Data
+@using Microsoft.EntityFrameworkCore
+@inject AppDbContext DbContext
+
+<h3>To-Do List</h3>
+
+<input type="text" @bind="newTodoTask" placeholder="Enter a new task" /> <!-- Input for new task -->
+<button @onclick="AddTodo">Add Todo</button>
+
+<ul>
+@foreach (var todo in todos)
+{
+    <li>
+        <input type="checkbox" @bind="@todo.IsCompleted" /> <!-- Use @bind only -->
+        @todo.Task
+        <button @onclick="() => DeleteTodo(todo)">Delete</button>
+    </li>
+}
+</ul>
+
+@code {
+    private List<ToDo> todos = new List<ToDo>();
+    private string newTodoTask; // Input variable
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch existing todos from the database
+        todos = await DbContext.ToDos.ToListAsync();
+    }
+
+    private async Task AddTodo()
+    {
+        // Ensure the task isn't empty
+        if (!string.IsNullOrWhiteSpace(newTodoTask)) 
+        {
+            var newTodo = new ToDo { Task = newTodoTask, IsCompleted = false };
+            await DbContext.ToDos.AddAsync(newTodo); 
+            await DbContext.SaveChangesAsync(); 
+            todos.Add(newTodo); // Add to the list to update UI
+            newTodoTask = string.Empty; // Clear input after adding
+        }
+    }
+
+    private async Task UpdateTodo(ToDo todo)
+    {
+        // Update the task's completion status
+        DbContext.ToDos.Update(todo);
+        await DbContext.SaveChangesAsync(); 
+    }
+
+    private async Task DeleteTodo(ToDo todo)
+    {
+        // Remove the task from the database and list
+        DbContext.ToDos.Remove(todo);
+        await DbContext.SaveChangesAsync(); 
+        todos.Remove(todo); // Update UI
+    }
+}
