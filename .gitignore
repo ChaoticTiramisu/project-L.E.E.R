@@ -1,0 +1,41 @@
+# Ignore bin and obj directories
+bin/
+obj/
+
+# Ignore user-specific files
+*.db
+*.db-shm
+*.db-wal
+
+# Ignore Visual Studio specific files
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore app settings with environment-specific data (excluding the main appsettings.json)
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+
+# Ignore any publish output
+/wwwroot/publish/
+
+# Ignore EF Core migrations if you have them auto-generated (if necessary)
+/Migrations/
+
+# Ignore .NET Core specific files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore temporary files created by Visual Studio
+_ReSharper*/
+*.DotSettings.user
+
+# Optional: If you use Rider or JetBrains tools
+.idea/
+
+# Ignore Logs
+*.log
